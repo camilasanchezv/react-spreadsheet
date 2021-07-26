@@ -5,7 +5,6 @@ import './styles.scss'
 // Name Columns
 function columnHeader(n) {
     if (n < 0) return 0;
-
     var result = '';
     do {
         result = (n % 26 + 10).toString(36) + result;
@@ -25,7 +24,7 @@ export default function Table({ defaultCol, defaultRow }) {
         for (let c = -1; c < defaultCol; c++) {
             let column = []
             for (let r = 0; r <= defaultRow; r++) {
-                if (r === 0) {
+                if (r === 0) { // if its the first row position (header)
                     column.push({
                         x: c + 1,
                         y: r,
@@ -34,7 +33,7 @@ export default function Table({ defaultCol, defaultRow }) {
                         value: '',
                         formula: '',
                     })
-                } else if (columnHeader(c) === 0) {
+                } else if (columnHeader(c) === 0) {  // if its the first column position (header)
                     column.push({
                         x: c + 1,
                         y: r,
@@ -133,8 +132,8 @@ export default function Table({ defaultCol, defaultRow }) {
                 {table.map((col, index) => (
                     <div key={index}>
                         {col.map((cell) => (
-                            <div key={cell.id}><Cell id={cell.id} x={cell.x} y={cell.y} header={cell.header} value={cell.value} formula={cell.formula}
-                                table={table} setTable={setTable} /></div>
+                            <Cell key={cell.id} id={cell.id} x={cell.x} y={cell.y} header={cell.header} value={cell.value} formula={cell.formula}
+                                table={table} setTable={setTable} />
                         ))}
                     </div>
                 ))}

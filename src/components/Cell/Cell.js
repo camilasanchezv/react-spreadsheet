@@ -19,6 +19,7 @@ export default function Cell({ table, setTable, ...props }) {
         }
         return null
     }, [table])
+
     // turns letters into numeric coord
     function getValue(s) {
         return s.split('').reduce((r, a) => r * 26 + parseInt(a, 36) - 9, 0);
@@ -28,24 +29,20 @@ export default function Cell({ table, setTable, ...props }) {
     function updateFormula(display) {
         let auxTable = [...table]
         auxTable[props.x][props.y].formula = display
-        if (!props.formula.startsWith('=SUM(')) {
-            auxTable[props.x][props.y].value = display
-        } else {
-            auxTable[props.x][props.y].value = ''
-        }
         setTable(auxTable)
     }
 
+    // update cell's value
     const updateValue = useCallback((display) => {
         let auxTable = [...table]
         auxTable[props.x][props.y].value = display
         setTable(auxTable)
     }, [props.x, props.y, table, setTable])
 
-    // this value contains which cells we would add
+    // this memo contains which cell's value we would add
     const cellSUM = useMemo(() => {
         if (props.formula.startsWith('=SUM(') && props.formula.endsWith(')')) {
-            let cells = props.formula.substring(5, props.formula.length - 1).split(';')
+            let cells = props.formula.substring(5, props.formula.length - 1).split(';') // arrays of cells
             let values = []
 
             let valid = true;
@@ -59,15 +56,16 @@ export default function Cell({ table, setTable, ...props }) {
                     break;
                 }
             }
+
             if (valid) return values
         }
         return null
     }, [props.formula, validCell])
 
-    // this value contains which cells we would substract
+    // this memo contains which cell's value we would substract
     const cellMINUS = useMemo(() => {
         if (props.formula.startsWith('=MINUS(') && props.formula.endsWith(')')) {
-            let cells = props.formula.substring(7, props.formula.length - 1).split(';')
+            let cells = props.formula.substring(7, props.formula.length - 1).split(';')  // arrays of cells
             let values = []
 
             let valid = true;
@@ -94,7 +92,7 @@ export default function Cell({ table, setTable, ...props }) {
             for (let i = 0; i < cellSUM.length; i++) {
                 value += Number(cellSUM[i])
             }
-            if (props.value !== value) //this if works as it would in a recursive function, it stops the re-rendering when unnecessary
+            if (props.value !== value) // this if works as it would in a recursive function, it stops the re-rendering when unnecessary
                 updateValue(value)
         } else if (cellMINUS) {
             let value = Number(cellMINUS[0]) - Number(cellMINUS[1])
@@ -112,7 +110,7 @@ export default function Cell({ table, setTable, ...props }) {
                 :
                 <input
                     className="cell-component"
-                    value={focus ? props.formula : props.value === 0 ? props.value : props.value || props.formula}
+                    value={focus ? props.formula : props.value}
                     onChange={(e) => updateFormula(e.target.value)}
                     onClick={() => setFocus(true)}
                 />

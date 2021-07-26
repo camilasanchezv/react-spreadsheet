@@ -42,7 +42,7 @@ export default function Cell({ table, setTable, ...props }) {
         setTable(auxTable)
     }, [props.x, props.y, table, setTable])
 
-    // this value contains que cells we would add
+    // this value contains which cells we would add
     const cellSUM = useMemo(() => {
         if (props.formula.startsWith('=SUM(') && props.formula.endsWith(')')) {
             let cells = props.formula.substring(5, props.formula.length - 1).split(';')
@@ -64,7 +64,7 @@ export default function Cell({ table, setTable, ...props }) {
         return null
     }, [props.formula, validCell])
 
-    // this value contains que cells we would substract
+    // this value contains which cells we would substract
     const cellMINUS = useMemo(() => {
         if (props.formula.startsWith('=MINUS(') && props.formula.endsWith(')')) {
             let cells = props.formula.substring(7, props.formula.length - 1).split(';')
@@ -112,7 +112,7 @@ export default function Cell({ table, setTable, ...props }) {
                 :
                 <input
                     className="cell-component"
-                    value={focus ? props.formula : props.value === 0 ? props.value : props.value || props.formula} // special case because for 0
+                    value={focus ? props.formula : props.value === 0 ? props.value : props.value || props.formula}
                     onChange={(e) => updateFormula(e.target.value)}
                     onClick={() => setFocus(true)}
                 />

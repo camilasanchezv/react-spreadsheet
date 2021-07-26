@@ -12,7 +12,7 @@ export function useOnClickOutside(handler, ref) {
         document.addEventListener('mousedown', listener)
         document.addEventListener('touchstart', listener)
 
-        return () => {
+        return () => { // 'dismount' listeners
             document.removeEventListener('mousedown', listener)
             document.removeEventListener('touchstart', listener)
         }

@@ -31,7 +31,6 @@ export default function Table({ defaultCol, defaultRow }) {
                         id: columnHeader(c),
                         header: true,
                         value: '',
-                        formula: '',
                     })
                 } else if (columnHeader(c) === 0) {  // if its the first column position (header)
                     column.push({
@@ -40,7 +39,6 @@ export default function Table({ defaultCol, defaultRow }) {
                         id: r,
                         header: true,
                         value: '',
-                        formula: '',
                     })
                 } else {
                     column.push({
@@ -49,7 +47,6 @@ export default function Table({ defaultCol, defaultRow }) {
                         id: columnHeader(c) + r,
                         header: false,
                         value: '',
-                        formula: '',
                     })
                 }
             }
@@ -72,7 +69,6 @@ export default function Table({ defaultCol, defaultRow }) {
                     id: columnHeader(numCol),
                     header: true,
                     value: '',
-                    formula: '',
                 })
             } else if (columnHeader(numCol) === 0) {
                 column.push({
@@ -81,7 +77,6 @@ export default function Table({ defaultCol, defaultRow }) {
                     id: r,
                     header: true,
                     value: '',
-                    formula: '',
                 })
             } else {
                 column.push({
@@ -90,7 +85,6 @@ export default function Table({ defaultCol, defaultRow }) {
                     id: columnHeader(numCol) + r,
                     header: false,
                     value: '',
-                    formula: '',
                 })
             }
         }
@@ -108,7 +102,6 @@ export default function Table({ defaultCol, defaultRow }) {
                     id: numRow + 1,
                     header: true,
                     value: '',
-                    formula: '',
                 })
             } else {
                 auxTable[c].push({
@@ -117,7 +110,6 @@ export default function Table({ defaultCol, defaultRow }) {
                     id: columnHeader(c - 1) + (numRow + 1),
                     header: false,
                     value: '',
-                    formula: '',
                 })
             }
         }
@@ -132,7 +124,7 @@ export default function Table({ defaultCol, defaultRow }) {
                 {table.map((col, index) => (
                     <div key={index}>
                         {col.map((cell) => (
-                            <Cell key={cell.id} id={cell.id} x={cell.x} y={cell.y} header={cell.header} value={cell.value} formula={cell.formula}
+                            <Cell key={cell.id} id={cell.id} x={cell.x} y={cell.y} header={cell.header} value={cell.value}
                                 table={table} setTable={setTable} />
                         ))}
                     </div>

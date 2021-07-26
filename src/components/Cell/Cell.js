@@ -3,6 +3,8 @@ import { useOnClickOutside } from '../../hooks/useClickOutside'
 import "./styles.scss";
 
 export default function Cell({ table, setTable, ...props }) {
+    const [formula, setFormula] = useState('')
+
     const [focus, setFocus] = useState(false)
     const cellRef = useRef(null)
     useOnClickOutside(() => setFocus(false), cellRef)
@@ -14,7 +16,7 @@ export default function Cell({ table, setTable, ...props }) {
             if (arr && arr.length === 2 && Number(arr[1]) && !Number(arr[0])) {
                 let y = arr[1]
                 let x = getValue(arr[0])
-                if (table[x] && table[x][y]) return table[x][y].value || table[x][y].formula
+                if (table[x] && table[x][y]) return table[x][y].value
             }
         }
         return null
@@ -23,13 +25,6 @@ export default function Cell({ table, setTable, ...props }) {
     // turns letters into numeric coord
     function getValue(s) {
         return s.split('').reduce((r, a) => r * 26 + parseInt(a, 36) - 9, 0);
-    }
-
-    // update cell's formula
-    function updateFormula(display) {
-        let auxTable = [...table]
-        auxTable[props.x][props.y].formula = display
-        setTable(auxTable)
     }
 
     // update cell's value
@@ -41,8 +36,8 @@ export default function Cell({ table, setTable, ...props }) {
 
     // this memo contains which cell's value we would add
     const cellSUM = useMemo(() => {
-        if (props.formula.startsWith('=SUM(') && props.formula.endsWith(')')) {
-            let cells = props.formula.substring(5, props.formula.length - 1).split(';') // arrays of cells
+        if (formula.startsWith('=SUM(') && formula.endsWith(')')) {
+            let cells = formula.substring(5, formula.length - 1).split(';') // arrays of cells
             let values = []
 
             let valid = true;
@@ -60,12 +55,12 @@ export default function Cell({ table, setTable, ...props }) {
             if (valid) return values
         }
         return null
-    }, [props.formula, validCell])
+    }, [formula, validCell])
 
     // this memo contains which cell's value we would substract
     const cellMINUS = useMemo(() => {
-        if (props.formula.startsWith('=MINUS(') && props.formula.endsWith(')')) {
-            let cells = props.formula.substring(7, props.formula.length - 1).split(';')  // arrays of cells
+        if (formula.startsWith('=MINUS(') && formula.endsWith(')')) {
+            let cells = formula.substring(7, formula.length - 1).split(';')  // arrays of cells
             let values = []
 
             let valid = true;
@@ -84,7 +79,7 @@ export default function Cell({ table, setTable, ...props }) {
             }
         }
         return null
-    }, [props.formula, validCell])
+    }, [formula, validCell])
 
     useEffect(() => {
         if (cellSUM) {
@@ -99,9 +94,9 @@ export default function Cell({ table, setTable, ...props }) {
             if (props.value !== value)
                 updateValue(value)
         } else
-            if (props.formula !== props.value)
-                updateValue(props.formula)
-    }, [cellSUM, cellMINUS, props.value, updateValue, props.formula])
+            if (formula !== props.value)
+                updateValue(formula)
+    }, [cellSUM, cellMINUS, props.value, updateValue, formula])
 
     return (
         <div ref={cellRef}>
@@ -110,8 +105,8 @@ export default function Cell({ table, setTable, ...props }) {
                 :
                 <input
                     className="cell-component"
-                    value={focus ? props.formula : props.value}
-                    onChange={(e) => updateFormula(e.target.value)}
+                    value={focus ? formula : props.value}
+                    onChange={(e) => setFormula(e.target.value)}
                     onClick={() => setFocus(true)}
                 />
             }
